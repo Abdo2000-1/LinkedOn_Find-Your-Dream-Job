@@ -28,13 +28,14 @@
 
     <form id="sign-in">
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <label for="email">Email or Username:</label>
+        <input type="text" id="email" name="email" required>
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
 
         <button type="submit">Sign In</button>
+        <p id="form-message" style="display:none; margin-top: 12px; text-align:center; font-weight: bold;"></p>
     </form>
     <script src="../scripts/sign-in.js"></script>
 </body>

@@ -47,8 +47,17 @@ if (passwordInput) {
 const form = document.getElementById('sign-in');
 
 if (form) {
+    function showMessage(message, isSuccess = false) {
+        const messageBox = document.getElementById('form-message');
+        if (messageBox) {
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            messageBox.style.color = isSuccess ? '#28a745' : '#dc3545';
+        }
+        if (!isSuccess) alert(message);
+    }
 
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const email = document.getElementById('email').value.trim();
@@ -59,49 +68,43 @@ if (form) {
         // ======================
 
         if (!email || !password) {
-            alert('Please enter both email and password');
+            showMessage('Please enter both username/email and password');
             return;
         }
 
-        if (!email.includes('@')) {
-            alert('Please enter a valid email address');
+        let response;
+        let result;
+
+        try {
+            response = await fetch('/api/login/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            result = await response.json();
+        } catch (error) {
+            console.error(error);
+            showMessage('Cannot connect to Django server. Run: .\\.venv\\Scripts\\python.exe manage.py runserver 127.0.0.1:8001 then open http://127.0.0.1:8001/start.html');
             return;
         }
 
-        // ======================
-        // LocalStorage
-        // ======================
-
-        let users = JSON.parse(localStorage.getItem('usersData')) || [];
-
-        if (users.length === 0) {
-            alert('No users found. Please sign up first.');
+        if (!response.ok || !result.ok) {
+            showMessage(result.error || 'Invalid username/email or password!');
             return;
         }
-
-        let validUser = users.find(user =>
-            user.email === email && user.password === password
-        );
-
-        if (!validUser) {
-            alert('Invalid Email or Password!');
-            return;
-        }
-
-        // Save logged user
-        localStorage.setItem('loggedInUser', JSON.stringify(validUser));
 
         // UI Feedback
         const submitBtn = form.querySelector('button[type="submit"]');
         submitBtn.innerText = "Login Successful...";
         submitBtn.style.backgroundColor = "#28a745";
         submitBtn.disabled = true;
+        showMessage('Login successful. Redirecting...', true);
 
     
         // Redirect
         setTimeout(() => {
 
-            if (validUser.role === 'admin') {
+            if (result.user.role === 'admin') {
                 window.location.href = "../homeAdmin.html";
             } else {
                 window.location.href = "../homeUser.html";

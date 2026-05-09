@@ -1,21 +1,14 @@
 const tbody = document.getElementById("jobs-table-body");
 
-// Data Gathering
-let savedApps = JSON.parse(localStorage.getItem("applications")) || [];
-let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
 
-let allApps = savedApps.map(app => {
-    let job = jobs.find(j => j.jobTitle === app.job);
-
-    return {
-        job: app.job,
-        company: job?.company || "Unknown",
-        date: app.date,
-        status: app.status
-    };
-});
-
-// show data in table
 function renderTable(data) {
     tbody.innerHTML = "";
 
@@ -27,14 +20,36 @@ function renderTable(data) {
     data.forEach(app => {
         tbody.innerHTML += `
             <tr>
-                <td>${app.job}</td>
-                <td>${app.company}</td>
-                <td>${app.date}</td>
-                <td class="status-${app.status.toLowerCase()}">
-                    ${app.status}
+                <td>${escapeHtml(app.job)}</td>
+                <td>${escapeHtml(app.company)}</td>
+                <td>${escapeHtml(app.date)}</td>
+                <td class="status-${escapeHtml(app.status.toLowerCase())}">
+                    ${escapeHtml(app.status)}
                 </td>
             </tr>
         `;
     });
 }
-renderTable(allApps);
+
+async function loadApplications() {
+    let response;
+    let data;
+
+    try {
+        response = await fetch("/api/applications/");
+        data = await response.json();
+    } catch (error) {
+        console.error(error);
+        tbody.innerHTML = `<tr><td colspan="4">Cannot connect to Django server.</td></tr>`;
+        return;
+    }
+
+    if (!response.ok || !data.ok) {
+        tbody.innerHTML = `<tr><td colspan="4">${escapeHtml(data.error || "Could not load applications.")}</td></tr>`;
+        return;
+    }
+
+    renderTable(data.applications);
+}
+
+loadApplications();

@@ -1,4 +1,19 @@
 
+function showRequestError(error) {
+    console.error(error);
+    showMessage('Cannot connect to Django server. Run: .\\.venv\\Scripts\\python.exe manage.py runserver 127.0.0.1:8001 then open http://127.0.0.1:8001/start.html');
+}
+
+function showMessage(message, isSuccess = false) {
+    const messageBox = document.getElementById('form-message');
+    if (messageBox) {
+        messageBox.textContent = message;
+        messageBox.style.display = 'block';
+        messageBox.style.color = isSuccess ? '#28a745' : '#dc3545';
+    }
+    if (!isSuccess) alert(message);
+}
+
 document.getElementById('admin').addEventListener('change', function() {
     document.getElementById('companyInput').style.display = 'block';
 });
@@ -35,70 +50,75 @@ document.getElementById('toggleBothPw').addEventListener('click', function() {
     }
 });
 
-document.querySelector('form').addEventListener('submit', function(e) {
+document.querySelector('form').addEventListener('submit', async function(e) {
+    e.preventDefault();
     
-     let email = document.getElementById("email").value;
+    let username = document.getElementById("username").value.trim();
+    let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
     let confirmPassword = document.getElementById("confirm-password").value;
     let roleElement = document.querySelector('input[name="role"]:checked');
 
     if (!roleElement) {
-        e.preventDefault();
-        alert('Please select User or Admin');
+        showMessage('Please select User or Admin');
         return;
     }
 
     let role = roleElement.value;
-    let company = document.getElementById("companyInput").value;
+    let company = document.getElementById("company").value.trim();
     let phone = document.getElementById("phone").value;
+
+    if (username === '') {
+        showMessage('Please enter your username');
+        return;
+    }
 
     // Check passwords
     if (password !== confirmPassword) {
-        e.preventDefault();
-        alert('Passwords do not match!');
+        showMessage('Passwords do not match!');
         return;
     }
 
     // Check company for admin
     if (role === 'admin' && company === '') {
-        e.preventDefault();
-        alert('Please enter your company name');
+        showMessage('Please enter your company name');
         return;
     }
 
+    let response;
+    let result;
 
-    // ===============================
-    // LocalStorage
-    // ===============================
-
-    let users = JSON.parse(localStorage.getItem('usersData')) || [];
-
-    let userExists = users.some(u => u.email === email);
-
-    if (userExists) {
-        e.preventDefault();
-        alert('This email is already registered!');
+    try {
+        response = await fetch('/api/signup/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: email,
+                username: username,
+                password: password,
+                confirmPassword: confirmPassword,
+                role: role,
+                phone: phone,
+                company: role === 'admin' ? company : ''
+            })
+        });
+        result = await response.json();
+    } catch (error) {
+        showRequestError(error);
         return;
     }
 
-    let newUser = {
-        email: email,
-        password: password,
-        role: role,
-        phone: phone,
-        company: role === 'admin' ? company : null
-    };
-
-    users.push(newUser);
-    localStorage.setItem('usersData', JSON.stringify(users));
+    if (!response.ok || !result.ok) {
+        showMessage(result.error || 'Could not create account.');
+        return;
+    }
 
     // UI feedback
-    e.preventDefault(); 
-
     let submitBtn = document.querySelector('button[type="submit"]');
     submitBtn.innerText = "Account Created Successfully!";
     submitBtn.style.backgroundColor = "#28a745";
     submitBtn.disabled = true;
+    showMessage('Account created successfully. Redirecting to login...', true);
 
     setTimeout(() => {
         window.location.href = "sign-in.html";

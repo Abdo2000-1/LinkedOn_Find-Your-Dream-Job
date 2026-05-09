@@ -1,22 +1,55 @@
-
 let box = document.getElementById("uploadBox");
 let input = document.getElementById("fileInput");
-let jobs = JSON.parse(localStorage.getItem("jobs"));
 let titles = document.querySelector("#jobTitle");
 
-
-jobs.forEach((part) => {
-    titles.innerHTML += `<option value="${part.jobTitle}">${part.jobTitle}</option>`;
-});
-const urlParams = new URLSearchParams(window.location.search);
-const selectedJobFromUrl = urlParams.get('job');
-
-if (selectedJobFromUrl) {
-    titles.value = selectedJobFromUrl;
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
+async function loadJobs() {
+    let response;
+    let data;
 
-// box click
+    try {
+        response = await fetch("/api/jobs/");
+        data = await response.json();
+    } catch (error) {
+        console.error(error);
+        alert("Cannot connect to Django server. Run: .\\.venv\\Scripts\\python.exe manage.py runserver 127.0.0.1:8001 then open http://127.0.0.1:8001/start.html");
+        return;
+    }
+
+    if (!response.ok || !data.ok) {
+        alert(data.error || "Could not load jobs.");
+        return;
+    }
+
+    titles.innerHTML = `<option value="">Select a job</option>`;
+    data.jobs
+        .filter(job => job.status === "open")
+        .forEach((part) => {
+            titles.innerHTML += `<option value="${part.id}">${escapeHtml(part.jobTitle)}</option>`;
+        });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedJobId = urlParams.get('jobId');
+    const selectedJobTitle = urlParams.get('job');
+
+    if (selectedJobId) {
+        titles.value = selectedJobId;
+    } else if (selectedJobTitle) {
+        const match = data.jobs.find(job => job.jobTitle === selectedJobTitle);
+        if (match) titles.value = match.id;
+    }
+}
+
+loadJobs();
+
 box.addEventListener("click", () => {
     input.click();
 });
@@ -24,11 +57,10 @@ box.addEventListener("click", () => {
 input.addEventListener("change", () => {
     let file = input.files[0];
     if (file) {
-        box.innerHTML = `<p style="color: #2da7c9; font-weight: bold;">Selected: ${file.name}</p>`;
+        box.innerHTML = `<p style="color: #2da7c9; font-weight: bold;">Selected: ${escapeHtml(file.name)}</p>`;
     }
 });
 
-// Drag & Drop
 box.addEventListener("dragover", (e) => {
     e.preventDefault();
     box.style.borderColor = "#2da7c9";
@@ -45,11 +77,10 @@ box.addEventListener("drop", (e) => {
     input.files = e.dataTransfer.files;
 
     if (file) {
-        box.innerHTML = `<p style="color: #2da7c9; font-weight: bold;">Selected: ${file.name}</p>`;
+        box.innerHTML = `<p style="color: #2da7c9; font-weight: bold;">Selected: ${escapeHtml(file.name)}</p>`;
     }
 });
 
-// check form
 function handleSubmit(e) {
     e.preventDefault();
 
@@ -57,7 +88,6 @@ function handleSubmit(e) {
     let email = document.getElementById("email").value.trim();
     let job = document.getElementById("jobTitle").value;
     let exp = document.getElementById("experience").value;
-
     let file = input.files[0];
 
     let valid = true;
@@ -94,8 +124,6 @@ function handleSubmit(e) {
     }
 }
 
-
-// error handling
 function showError(id) {
     let el = document.getElementById(id);
     if (el) el.style.display = "block";
@@ -104,26 +132,37 @@ function showError(id) {
 function hideError(id) {
     let el = document.getElementById(id);
     if (el) el.style.display = "none";
-
-
 }
-// save application to localStorage
-function saveApplication(jobTitle, name, email, exp) {
-    let apps = JSON.parse(localStorage.getItem("applications")) || [];
 
-    let app = {
-        name: name,
-        email: email,
-        exp: exp,
-        job: jobTitle,
-        date: new Date().toLocaleDateString(),
-        status: "Pending"
-    };
+async function saveApplication(jobId, name, email, exp) {
+    const formData = new FormData();
+    formData.append("jobId", jobId);
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("exp", exp);
+    formData.append("coverLetter", document.getElementById("coverLetter").value);
+    formData.append("resume", input.files[0]);
 
-    apps.push(app);
-    localStorage.setItem("applications", JSON.stringify(apps));
+    let response;
+    let result;
 
-    // Show success message and redirect
+    try {
+        response = await fetch("/api/applications/", {
+            method: "POST",
+            body: formData
+        });
+        result = await response.json();
+    } catch (error) {
+        console.error(error);
+        alert("Cannot connect to Django server. Run: .\\.venv\\Scripts\\python.exe manage.py runserver 127.0.0.1:8001 then open http://127.0.0.1:8001/start.html");
+        return;
+    }
+
+    if (!response.ok || !result.ok) {
+        alert(result.error || "Could not submit application.");
+        return;
+    }
+
     let submitBtn = document.querySelector(".submit-btn");
     submitBtn.innerText = "Applied Successfully! Redirecting...";
     submitBtn.style.backgroundColor = "#28a745";
