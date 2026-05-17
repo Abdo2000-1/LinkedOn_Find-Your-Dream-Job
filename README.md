@@ -65,7 +65,7 @@ LinkedOn/
 ## Clone Repository
 
 ```bash
-git clone[ https://github.com/Abdo2000-1/LinkedOn_Find-Your-Dream-Job.git ]
+git clone https://github.com/Abdo2000-1/LinkedOn_Find-Your-Dream-Job.git
 ```
 
 ## Create Virtual Environment
