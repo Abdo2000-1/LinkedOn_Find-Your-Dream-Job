@@ -2,8 +2,8 @@
 
 <div align="center">
 
-![Django](https://img.shields.io/badge/Django-4.x-green?style=for-the-badge\&logo=django)
-![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge\&logo=python)
+![Django](https://img.shields.io/badge/Django-green?style=for-the-badge\&logo=django)
+![Python](https://img.shields.io/badge/Python-3.14-blue?style=for-the-badge\&logo=python)
 ![HTML5](https://img.shields.io/badge/HTML5-orange?style=for-the-badge\&logo=html5)
 ![CSS3](https://img.shields.io/badge/CSS3-blue?style=for-the-badge\&logo=css3)
 ![JavaScript](https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge\&logo=javascript)
@@ -28,33 +28,6 @@
 * User Login & Logout
 * Session Authentication
 * Password Validation
-* Protected Routes
-
-## 👤 User Profile System
-
-* Edit User Profile
-* Upload Profile Picture
-* Update Personal Information
-* View Other Users Profiles
-
-## 📰 Social Feed
-
-* Create Posts
-* Display Feed Posts
-* Dynamic Feed Updates
-* Responsive Feed Interface
-
-## 🔎 Search Functionality
-
-* Search For Users
-* Display Matching Profiles
-
-## 🛠️ Admin Features
-
-* Dedicated Admin Panel
-* User Management
-* Post Monitoring
-
 ---
 
 # 🏗️ Project Structure
@@ -92,8 +65,7 @@ LinkedOn/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/your-username/LinkedOn.git
-cd LinkedOn
+git clone[ https://github.com/Abdo2000-1/LinkedOn_Find-Your-Dream-Job.git ]
 ```
 
 ## Create Virtual Environment
@@ -148,30 +120,19 @@ You can:
 
 * Register a new account
 * Login to your account
-* Create posts
-* Edit your profile
-* Search for users
-* Explore the social feed
-
----
-
-# 📈 Future Improvements
-
-* Like & Comment System
-* Real-time Chat
-* Notifications
-* Friend Connections
-* Dark Mode
-* REST API Integration
+* Search for jobs
 
 ---
 
 # 👨‍💻 Team Members
 
 ```md
-- Yusuf Abd El-hamid
-- Team Member 2
-- Team Member 3
+- Abdo AL Adawy
+- Mohamed Tamer
+- Abdo Hamdy
+- Fathi Mostafa
+- Mohamed Farag
+- Ali Tarek
 ```
 
 ---
