@@ -1,28 +1,193 @@
-# Web-Technology-Assignment
+# 🚀 LinkedOn - Social Network Platform
 
-LinkedOn Job Search Website - Phase 3 Django version.
+<div align="center">
 
-## Run the project
+![Django](https://img.shields.io/badge/Django-4.x-green?style=for-the-badge\&logo=django)
+![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge\&logo=python)
+![HTML5](https://img.shields.io/badge/HTML5-orange?style=for-the-badge\&logo=html5)
+![CSS3](https://img.shields.io/badge/CSS3-blue?style=for-the-badge\&logo=css3)
+![JavaScript](https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge\&logo=javascript)
 
-```powershell
-.\.venv\Scripts\python.exe manage.py migrate
-.\.venv\Scripts\python.exe manage.py runserver 127.0.0.1:8001
+### A Professional Social Networking Platform Built With Django
+
+</div>
+
+---
+
+# 📌 Overview
+
+**LinkedOn** is a full-stack social networking web application inspired by professional networking platforms like LinkedIn. The project was developed using **Django** following the **MVT architecture** and includes authentication, profile management, posting system, feed interactions, search functionality, and admin management.
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication System
+
+* User Registration
+* User Login & Logout
+* Session Authentication
+* Password Validation
+* Protected Routes
+
+## 👤 User Profile System
+
+* Edit User Profile
+* Upload Profile Picture
+* Update Personal Information
+* View Other Users Profiles
+
+## 📰 Social Feed
+
+* Create Posts
+* Display Feed Posts
+* Dynamic Feed Updates
+* Responsive Feed Interface
+
+## 🔎 Search Functionality
+
+* Search For Users
+* Display Matching Profiles
+
+## 🛠️ Admin Features
+
+* Dedicated Admin Panel
+* User Management
+* Post Monitoring
+
+---
+
+# 🏗️ Project Structure
+
+```bash
+LinkedOn/
+│
+├── LinkedOn/
+├── accounts/
+├── network/
+├── templates/
+├── static/
+├── media/
+├── manage.py
+└── requirements.txt
 ```
 
-Open `http://127.0.0.1:8001/start.html`.
+---
 
-Do not open the `.html` files directly from File Explorer, because the AJAX APIs need the Django server.
+# ⚙️ Technologies Used
 
-If you do not have the local virtual environment, install dependencies first:
+| Technology | Purpose                  |
+| ---------- | ------------------------ |
+| Python     | Backend Logic            |
+| Django     | Web Framework            |
+| SQLite     | Database                 |
+| HTML5      | Structure                |
+| CSS3       | Styling                  |
+| JavaScript | Client-side Interactions |
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+---
+
+# 🚀 Installation & Setup
+
+## Clone Repository
+
+```bash
+git clone https://github.com/your-username/LinkedOn.git
+cd LinkedOn
 ```
 
-## Phase 3 features
+## Create Virtual Environment
 
-- Django backend with SQLite database.
-- Company admin signup/login and job create, edit, delete, and list APIs.
-- User signup/login, job search/list/details, apply, and applied-jobs APIs.
-- Existing frontend pages connected to the backend using AJAX.
+```bash
+python -m venv venv
+```
+
+## Activate Virtual Environment
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Mac/Linux
+
+```bash
+source venv/bin/activate
+```
+
+## Install Requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run Migrations
+
+```bash
+python manage.py migrate
+```
+
+## Run Server
+
+```bash
+python manage.py runserver
+```
+
+---
+
+# 🌐 Usage
+
+Open:
+
+```bash
+http://127.0.0.1:8000/
+```
+
+You can:
+
+* Register a new account
+* Login to your account
+* Create posts
+* Edit your profile
+* Search for users
+* Explore the social feed
+
+---
+
+# 📈 Future Improvements
+
+* Like & Comment System
+* Real-time Chat
+* Notifications
+* Friend Connections
+* Dark Mode
+* REST API Integration
+
+---
+
+# 👨‍💻 Team Members
+
+```md
+- Yusuf Abd El-hamid
+- Team Member 2
+- Team Member 3
+```
+
+---
+
+# ⭐ Support
+
+If you like this project:
+
+⭐ Star the repository
+🍴 Fork the project
+📢 Share it with others
+
+---
+
+<div align="center">
+
+## 💙 Built With Django & Passion
+
+</div>
